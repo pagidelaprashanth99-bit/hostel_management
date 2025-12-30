@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Appointments - Clinic Management System{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-calendar-event"></i> All Appointments</h2>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Patient</th>
+                        <th>Doctor</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for appointment in appointments %}
+                    <tr>
+                        <td>{{ appointment.id }}</td>
+                        <td>{{ appointment.patient.name }}</td>
+                        <td>{{ appointment.doctor.name }} ({{ appointment.doctor.specialization }})</td>
+                        <td>{{ appointment.appointment_date.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ appointment.appointment_time.strftime('%H:%M') }}</td>
+                        <td>
+                            {% if appointment.status == 'pending' %}
+                                <span class="badge bg-warning">Pending</span>
+                            {% elif appointment.status == 'approved' %}
+                                <span class="badge bg-success">Approved</span>
+                            {% elif appointment.status == 'reject' %}
+                                <span class="badge bg-danger">Rejected</span>
+                            {% elif appointment.status == 'completed' %}
+                                <span class="badge bg-info">Completed</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if appointment.status == 'completed' and not appointment.bill %}
+                                <a href="{{ url_for('generate_bill', appointment_id=appointment.id) }}" class="btn btn-sm btn-primary">
+                                    <i class="bi bi-receipt"></i> Generate Bill
+                                </a>
+                            {% elif appointment.bill %}
+                                <span class="badge bg-success">Bill Generated</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center">No appointments found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

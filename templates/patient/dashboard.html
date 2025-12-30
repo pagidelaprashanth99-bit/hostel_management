@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Patient Dashboard - Clinic Management System{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-speedometer2"></i> Patient Dashboard</h2>
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Welcome, {{ patient.name }}</h5>
+                <p class="card-text">
+                    <strong>Phone:</strong> {{ patient.phone or 'N/A' }}<br>
+                    <strong>Email:</strong> {{ patient.user.email }}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title">Upcoming Appointments</h6>
+                        <h2 class="mb-0">{{ upcoming_appointments }}</h2>
+                    </div>
+                    <i class="bi bi-calendar-event fs-1 opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title">Total Appointments</h6>
+                        <h2 class="mb-0">{{ total_appointments }}</h2>
+                    </div>
+                    <i class="bi bi-calendar-check fs-1 opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <a href="{{ url_for('book_appointment') }}" class="btn btn-primary me-2">
+                    <i class="bi bi-calendar-plus"></i> Book Appointment
+                </a>
+                <a href="{{ url_for('patient_appointments') }}" class="btn btn-outline-primary me-2">
+                    <i class="bi bi-calendar-event"></i> My Appointments
+                </a>
+                <a href="{{ url_for('patient_medical_records') }}" class="btn btn-outline-info me-2">
+                    <i class="bi bi-file-medical"></i> Medical Records
+                </a>
+                <a href="{{ url_for('patient_bills') }}" class="btn btn-outline-success">
+                    <i class="bi bi-receipt"></i> Bills
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

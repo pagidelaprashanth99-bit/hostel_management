@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Medical Records - Clinic Management System{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-file-medical"></i> My Medical Records</h2>
+
+<div class="card">
+    <div class="card-body">
+        {% if records %}
+            {% for record in records %}
+            <div class="card mb-3">
+                <div class="card-header bg-light">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>Date:</strong> {{ record.created_at.strftime('%Y-%m-%d %H:%M') }}
+                            {% if record.updated_at != record.created_at %}
+                                <small class="text-muted">(Updated: {{ record.updated_at.strftime('%Y-%m-%d %H:%M') }})</small>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <strong>Doctor:</strong> {{ record.doctor.name }} ({{ record.doctor.specialization }})
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h6>Diagnosis</h6>
+                    <p>{{ record.diagnosis }}</p>
+                    
+                    <h6>Prescription</h6>
+                    <p>{{ record.prescription }}</p>
+                    
+                    {% if record.notes %}
+                    <h6>Notes</h6>
+                    <p>{{ record.notes }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-center text-muted">No medical records found.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Generate Bill - Clinic Management System{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="bi bi-receipt"></i> Generate Bill</h4>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <strong>Patient:</strong> {{ appointment.patient.name }}<br>
+                    <strong>Doctor:</strong> {{ appointment.doctor.name }}<br>
+                    <strong>Specialization:</strong> {{ appointment.doctor.specialization }}<br>
+                    <strong>Appointment Date:</strong> {{ appointment.appointment_date.strftime('%Y-%m-%d') }}<br>
+                    <strong>Appointment Time:</strong> {{ appointment.appointment_time.strftime('%H:%M') }}
+                </div>
+                
+                <form method="POST" action="{{ url_for('generate_bill', appointment_id=appointment.id) }}">
+                    <div class="mb-3">
+                        <label for="amount" class="form-label">Amount ($)</label>
+                        <input type="number" class="form-control" id="amount" name="amount" step="0.01" value="{{ appointment.doctor.consultation_fee }}" required>
+                        <small class="text-muted">Default consultation fee: ${{ appointment.doctor.consultation_fee }}</small>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Generate Bill</button>
+                        <a href="{{ url_for('admin_appointments') }}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

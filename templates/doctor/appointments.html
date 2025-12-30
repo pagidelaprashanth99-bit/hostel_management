@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Appointments - Clinic Management System{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-calendar-event"></i> My Appointments</h2>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Patient</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Reason</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for appointment in appointments %}
+                    <tr>
+                        <td>{{ appointment.id }}</td>
+                        <td>{{ appointment.patient.name }}</td>
+                        <td>{{ appointment.appointment_date.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ appointment.appointment_time.strftime('%H:%M') }}</td>
+                        <td>{{ appointment.reason or 'N/A' }}</td>
+                        <td>
+                            {% if appointment.status == 'pending' %}
+                                <span class="badge bg-warning">Pending</span>
+                            {% elif appointment.status == 'approved' %}
+                                <span class="badge bg-success">Approved</span>
+                            {% elif appointment.status == 'reject' %}
+                                <span class="badge bg-danger">Rejected</span>
+                            {% elif appointment.status == 'completed' %}
+                                <span class="badge bg-info">Completed</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if appointment.status == 'pending' %}
+                                <form method="POST" action="{{ url_for('approve_appointment', appointment_id=appointment.id) }}" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-success">
+                                        <i class="bi bi-check-circle"></i> Approve
+                                    </button>
+                                </form>
+                                <form method="POST" action="{{ url_for('reject_appointment', appointment_id=appointment.id) }}" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-danger">
+                                        <i class="bi bi-x-circle"></i> Reject
+                                    </button>
+                                </form>
+                            {% elif appointment.status == 'approved' or appointment.status == 'completed' %}
+                                <a href="{{ url_for('add_medical_record', appointment_id=appointment.id) }}" class="btn btn-sm btn-primary">
+                                    <i class="bi bi-file-medical"></i> Medical Record
+                                </a>
+                                <a href="{{ url_for('patient_history', patient_id=appointment.patient_id) }}" class="btn btn-sm btn-info">
+                                    <i class="bi bi-clock-history"></i> History
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center">No appointments found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

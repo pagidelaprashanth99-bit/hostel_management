@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Medical Record - Clinic Management System{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="bi bi-file-medical"></i> Medical Record</h4>
+            </div>
+            <div class="card-body">
+                <div class="mb-4">
+                    <h5>Appointment Details</h5>
+                    <p class="mb-1"><strong>Patient:</strong> {{ appointment.patient.name }}</p>
+                    <p class="mb-1"><strong>Date:</strong> {{ appointment.appointment_date.strftime('%Y-%m-%d') }}</p>
+                    <p class="mb-1"><strong>Time:</strong> {{ appointment.appointment_time.strftime('%H:%M') }}</p>
+                    <p class="mb-0"><strong>Reason:</strong> {{ appointment.reason or 'N/A' }}</p>
+                </div>
+                
+                <form method="POST" action="{{ url_for('add_medical_record', appointment_id=appointment.id) }}">
+                    <div class="mb-3">
+                        <label for="diagnosis" class="form-label">Diagnosis</label>
+                        <textarea class="form-control" id="diagnosis" name="diagnosis" rows="3" required>{{ medical_record.diagnosis if medical_record else '' }}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="prescription" class="form-label">Prescription</label>
+                        <textarea class="form-control" id="prescription" name="prescription" rows="4" required>{{ medical_record.prescription if medical_record else '' }}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="notes" class="form-label">Notes</label>
+                        <textarea class="form-control" id="notes" name="notes" rows="3">{{ medical_record.notes if medical_record else '' }}</textarea>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Save Medical Record</button>
+                        <a href="{{ url_for('doctor_appointments') }}" class="btn btn-secondary">Back</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

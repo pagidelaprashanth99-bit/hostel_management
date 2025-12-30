@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Patient History - Clinic Management System{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-clock-history"></i> Patient History: {{ patient.name }}</h2>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <h5>Patient Information</h5>
+        <p class="mb-1"><strong>Name:</strong> {{ patient.name }}</p>
+        <p class="mb-1"><strong>Phone:</strong> {{ patient.phone or 'N/A' }}</p>
+        <p class="mb-0"><strong>Gender:</strong> {{ patient.gender or 'N/A' }}</p>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Medical Records</h5>
+    </div>
+    <div class="card-body">
+        {% if records %}
+            {% for record in records %}
+            <div class="card mb-3">
+                <div class="card-header">
+                    <strong>Date:</strong> {{ record.created_at.strftime('%Y-%m-%d %H:%M') }}
+                </div>
+                <div class="card-body">
+                    <p><strong>Diagnosis:</strong> {{ record.diagnosis }}</p>
+                    <p><strong>Prescription:</strong> {{ record.prescription }}</p>
+                    {% if record.notes %}
+                    <p><strong>Notes:</strong> {{ record.notes }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-center text-muted">No medical records found for this patient.</p>
+        {% endif %}
+    </div>
+</div>
+
+<a href="{{ url_for('doctor_appointments') }}" class="btn btn-secondary">Back to Appointments</a>
+{% endblock %}
+

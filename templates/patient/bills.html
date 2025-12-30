@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Bills - Clinic Management System{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-receipt"></i> My Bills</h2>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Bill ID</th>
+                        <th>Appointment Date</th>
+                        <th>Doctor</th>
+                        <th>Consultation Fee</th>
+                        <th>Total Amount</th>
+                        <th>Status</th>
+                        <th>Generated Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for bill in bills %}
+                    <tr>
+                        <td>{{ bill.id }}</td>
+                        <td>{{ bill.appointment.appointment_date.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ bill.appointment.doctor.name }}</td>
+                        <td>${{ bill.consultation_fee }}</td>
+                        <td><strong>${{ bill.amount }}</strong></td>
+                        <td>
+                            {% if bill.status == 'pending' %}
+                                <span class="badge bg-warning">Pending</span>
+                            {% else %}
+                                <span class="badge bg-success">Paid</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ bill.created_at.strftime('%Y-%m-%d') }}</td>
+                        <td>
+                            <a href="{{ url_for('download_bill', bill_id=bill.id) }}" class="btn btn-sm btn-primary">
+                                <i class="bi bi-download"></i> Download PDF
+                            </a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="8" class="text-center">No bills found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
