@@ -22,6 +22,7 @@
                         <th>Phone</th>
                         <th>Consultation Fee</th>
                         <th>Status</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -39,10 +40,18 @@
                                 <span class="badge bg-secondary">Inactive</span>
                             {% endif %}
                         </td>
+                        <td>
+    <form method="POST" action="{{ url_for('delete_doctor', doctor_id=doctor.id) }}">
+        <button type="submit" class="btn btn-danger btn-sm"
+                onclick="return confirm('Remove this doctor?')">
+            Remove
+        </button>
+    </form>
+</td>
                     </tr>
                     {% else %}
                     <tr>
-                        <td colspan="6" class="text-center">No doctors found.</td>
+                        <td colspan="7" class="text-center">No doctors found.</td>
                     </tr>
                     {% endfor %}
                 </tbody>
