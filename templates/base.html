@@ -37,6 +37,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('admin_bills') }}">Bills</a>
                     </li>
+                    <li class="nav-item">
+    <a class="nav-link" href="{{ url_for('admin_medical_records') }}">
+        Medical Records
+    </a>
+</li>
                     {% elif session.role == 'doctor' %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
