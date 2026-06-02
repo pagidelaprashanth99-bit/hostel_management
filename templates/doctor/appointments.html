@@ -18,6 +18,7 @@
                         <th>Reason</th>
                         <th>Status</th>
                         <th>Actions</th>
+                        <th>Payment</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -60,6 +61,17 @@
                                 </a>
                             {% endif %}
                         </td>
+                        <td>
+    {% if appointment.bill %}
+        {% if appointment.bill.status == 'paid' %}
+            <span class="badge bg-success">Payment Completed</span>
+        {% else %}
+            <span class="badge bg-warning">Payment Pending</span>
+        {% endif %}
+    {% else %}
+        <span class="badge bg-secondary">No Bill</span>
+    {% endif %}
+</td>
                     </tr>
                     {% else %}
                     <tr>
