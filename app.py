@@ -292,7 +292,67 @@ def add_doctor():
         return redirect(url_for('admin_doctors'))
     
     return render_template('admin/add_doctor.html')
+@app.route('/admin/doctor/<int:doctor_id>/delete', methods=['POST'])
+@login_required('admin')
+def delete_doctor(doctor_id):
+    doctor = Doctor.query.get_or_404(doctor_id)
 
+    if doctor.appointments:
+        doctor.is_active = False
+        flash('Doctor has appointments, so doctor is deactivated instead of deleted.', 'warning')
+    else:
+        db.session.delete(doctor.user)
+        flash('Doctor removed successfully.', 'success')
+
+    db.session.commit()
+    return redirect(url_for('admin_doctors'))
+
+
+@app.route('/admin/medical-records')
+@login_required('admin')
+def admin_medical_records():
+    records = MedicalRecord.query.order_by(MedicalRecord.created_at.desc()).all()
+    return render_template('admin/medical_records.html', records=records)
+
+
+@app.route('/admin/medical-record/<int:record_id>/download')
+@login_required('admin')
+def admin_download_medical_record(record_id):
+    record = MedicalRecord.query.get_or_404(record_id)
+
+    buffer = BytesIO()
+    p = canvas.Canvas(buffer, pagesize=letter)
+    width, height = letter
+
+    y = height - 50
+    p.setFont("Helvetica-Bold", 18)
+    p.drawString(50, y, "Medical Record")
+    y -= 40
+
+    p.setFont("Helvetica", 12)
+    p.drawString(50, y, f"Patient: {record.patient.name}")
+    y -= 20
+    p.drawString(50, y, f"Doctor: {record.doctor.name}")
+    y -= 20
+    p.drawString(50, y, f"Date: {record.created_at.strftime('%Y-%m-%d')}")
+    y -= 40
+
+    p.drawString(50, y, f"Diagnosis: {record.diagnosis or ''}")
+    y -= 40
+    p.drawString(50, y, f"Prescription: {record.prescription or ''}")
+    y -= 40
+    p.drawString(50, y, f"Notes: {record.notes or ''}")
+
+    p.showPage()
+    p.save()
+    buffer.seek(0)
+
+    return send_file(
+        buffer,
+        mimetype='application/pdf',
+        as_attachment=True,
+        download_name=f'medical_record_{record.id}.pdf'
+    )
 @app.route('/admin/patients')
 @login_required('admin')
 def admin_patients():
