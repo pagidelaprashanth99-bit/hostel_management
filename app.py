@@ -358,7 +358,22 @@ def admin_download_medical_record(record_id):
 def admin_patients():
     patients = Patient.query.all()
     return render_template('admin/patients.html', patients=patients)
+@app.route('/admin/patient/<int:patient_id>/delete', methods=['POST'])
+@login_required('admin')
+def delete_patient(patient_id):
+    patient = Patient.query.get_or_404(patient_id)
 
+    MedicalRecord.query.filter_by(patient_id=patient.id).delete()
+    Bill.query.filter_by(patient_id=patient.id).delete()
+    Appointment.query.filter_by(patient_id=patient.id).delete()
+
+    user = patient.user
+    db.session.delete(patient)
+    db.session.delete(user)
+    db.session.commit()
+
+    flash('Patient removed successfully.', 'success')
+    return redirect(url_for('admin_patients'))
 @app.route('/admin/appointments')
 @login_required('admin')
 def admin_appointments():
