@@ -585,7 +585,6 @@ if __name__ == '__main__':
             )
             db.session.add(admin_user)
             db.session.commit()
-            print("Default admin created: username='admin', password='admin123'")
-    
+if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=False)
 
