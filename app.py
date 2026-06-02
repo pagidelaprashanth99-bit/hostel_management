@@ -571,10 +571,10 @@ def download_bill(bill_id):
     buffer.seek(0)
     return send_file(buffer, mimetype='application/pdf', as_attachment=True, download_name=f'bill_{bill.id}.pdf')
 
-if __name__ == '__main__':
+def init_db():
     with app.app_context():
         db.create_all()
-        
+
         # Create default admin user if not exists
         if not User.query.filter_by(role='admin').first():
             admin_user = User(
@@ -585,6 +585,8 @@ if __name__ == '__main__':
             )
             db.session.add(admin_user)
             db.session.commit()
+
+init_db()
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=False)
 
